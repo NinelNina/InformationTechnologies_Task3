@@ -1,8 +1,11 @@
-﻿namespace Task2.Model;
+﻿
+using System;
+
+namespace Task2.Model;
 
 public class Dog : Animal, IVoicalizable
 {
-    public event IVoicalizable.VoiceHandler Voice;
+    public event EventHandler<VoiceEventArgs> Voice;
 
     public override bool Move()
     {
@@ -15,9 +18,15 @@ public class Dog : Animal, IVoicalizable
         return false;
     }
 
+    public string GetVoiceMessage()
+    {
+        return "Собака лает!";
+    }
+
     public void OnVocalize()
     {
-        Voice?.Invoke($"Гав!");
+        Voice?.Invoke(this, new VoiceEventArgs(GetVoiceMessage()));
+
     }
 
     public override bool Stand()

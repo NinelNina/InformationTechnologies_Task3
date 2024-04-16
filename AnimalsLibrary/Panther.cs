@@ -2,8 +2,8 @@
 
 public class Panther : Animal, IVoicalizable
 {
-    public event IVoicalizable.VoiceHandler Voice;
-    public event EventHandler ClimbTree;
+    public event EventHandler<VoiceEventArgs> Voice;
+    public event EventHandler<ClimbTreeEventArgs> ClimbTree;
 
     public override bool Move()
     {
@@ -14,6 +14,11 @@ public class Panther : Animal, IVoicalizable
             return true;
         }
         return false;
+    }
+
+    public string GetVoiceMessage()
+    {
+        return "Пантера рычит!";
     }
 
     public override bool Stand()
@@ -29,11 +34,21 @@ public class Panther : Animal, IVoicalizable
 
     public void OnClimbTree()
     {
-        ClimbTree?.Invoke(this, EventArgs.Empty);
+        ClimbTree?.Invoke(this, new ClimbTreeEventArgs("Пантера залезла на дерево."));
     }
 
     public void OnVocalize()
     {
-        Voice?.Invoke($"Ррр!");
+        Voice?.Invoke(this, new VoiceEventArgs(GetVoiceMessage()));
+    }
+}
+
+public class ClimbTreeEventArgs : EventArgs
+{
+    public string ClimbTreeMessage { get; }
+
+    public ClimbTreeEventArgs(string climbTreeMessage)
+    {
+        ClimbTreeMessage = climbTreeMessage;
     }
 }
